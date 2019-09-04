@@ -1,0 +1,8 @@
+[all_servers:vars]
+ansible_ssh_private_key_file = /Users/apple/Documents/TOP SECRET/OregonKey/Kazmi-Oregon.pem
+
+[dashboard:vars]
+ansible_ssh_private_key_file=./mykeypair.pem
+
+[dashboard]
+1.2.3.4 dashboard_domain=my.domain.info 

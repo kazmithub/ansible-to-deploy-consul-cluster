@@ -1,0 +1,8 @@
+---
+
+- name: start agent
+  become: 'true'
+  run_once: 'true'
+  register: 'bootstrap'
+  shell:
+    cmd: "/usr/local/bin/consul agent -bootstrap -node-id 'adf4238a-{{ range(100, 1000) | random }}b-9ddc-4a9d-5b6758e4159e' -config-file /etc/consul.d/config.json &"

@@ -1,0 +1,12 @@
+---
+- name: Template a file to /etc/consul.d/config.json
+  become: 'true'
+  template:
+    src: '/Users/apple/Documents/Work/ansible-consul/roles/clients/templates/config.json.j2'
+    dest: '/etc/consul.d/config.json'
+    mode: '0777'
+
+- name: start agent
+  become: 'true'
+  shell:
+    cmd: "/usr/local/bin/consul agent -node-id 'adf4238a-{{ range(100, 1000) | random }}b-9ddc-4a9d-5b6758e4159e' -config-file /etc/consul.d/config.json &"
