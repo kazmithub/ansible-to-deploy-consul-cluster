@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  gather_facts: 'yes'
+  tasks:
+  - debug: var=ansible_default_ipv4 verbosity=0
+
+- hosts: servers
+  become: 'true'
+  roles:
+    - servers

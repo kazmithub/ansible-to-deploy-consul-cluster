@@ -1,0 +1,13 @@
+/etc/init/consul.conf
+ start on filesystem or runlevel [2345]
+ stop on shutdown
+
+ script
+
+     /usr/local/bin/consul agent \
+         -server \
+         -data-dir=/tmp/consul \
+         -client=0.0.0.0 \
+         -ui \
+ end script
+ EOF

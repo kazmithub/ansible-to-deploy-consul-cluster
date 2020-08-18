@@ -1,0 +1,18 @@
+{
+    "client_addr": "{{ client_addr }}",
+    "data_dir": "{{ data_dir }}",
+    "enable_syslog": true,
+    "encrypt": "{{ encryptionKey }}",
+    "log_level": "INFO",
+    "server": true,
+    "ui": {{ ui }},
+    "rejoin_after_leave": true,
+    "start_join": [ 
+    {% for host in groups['bootstrap'] %}
+    "{{ hostvars[host].ansible_default_ipv4.address }}:8301"{% if not loop.last %}, {% endif %}
+    {% endfor %}],
+    "retry_join": [ 
+    {% for host in groups['servers'] %}
+    "{{ hostvars[host].ansible_default_ipv4.address }}:8301"{% if not loop.last %}, {% endif %}
+    {% endfor %}]
+}

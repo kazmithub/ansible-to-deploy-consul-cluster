@@ -1,0 +1,101 @@
+---
+
+- name: Install dependencies.
+  register: dependencies
+  become: 'true'
+  yum: pkg="{{ item }}" update_cache='true'
+  with_items:
+    - unzip
+
+- name: Download consul.
+  become: 'true' 
+  get_url:
+    url: 'https://releases.hashicorp.com/consul/0.8.4/consul_0.8.4_linux_amd64.zip'
+    dest: '/home/ec2-user/consul.zip'
+
+- name: Extract zip file.
+  become: 'true'
+  unarchive:
+    remote_src: 'yes'
+    group: 'root'
+    owner: 'root'
+    src: '/home/ec2-user/consul.zip'
+    dest: '/usr/local/bin/' 
+
+- name: Cleanup
+  become: 'true'
+  file:
+    path: '/home/ec2-user/consul.zip'
+    state: 'absent'
+
+- name: Complete installation
+  become: 'true'
+  shell: |
+    consul -autocomplete-install
+    complete -C /usr/local/bin/consul consul
+    useradd --system --home /etc/consul.d --shell /bin/false consul
+    mkdir --parents /opt/consul
+    chown --recursive consul:consul /opt/consul
+    mkdir --parents /etc/consul.d
+    touch /etc/consul.d/consul.hcl
+    chown --recursive consul:consul /etc/consul.d
+    chmod 640 /etc/consul.d/consul.hcl
+
+- name: Creates directory /etc/consul.d/scripts/
+  become: 'true'
+  file:
+    path: '/etc/consul.d/scripts/'
+    state: directory
+    mode: '0777'
+
+- name: Creates directory /etc/systemd/system
+  become: 'true'
+  file:
+    path: '/etc/systemd/system'
+    state: directory
+    mode: '0777'
+
+- name: Creates directory /etc/init
+  become: 'true'
+  file:
+    path: '/etc/init/'
+    state: directory
+    mode: '0777'
+
+- name: Template a file to /etc/consul.d/config.json
+  become: 'true'
+  template:
+    src: '/Users/apple/Documents/Work/ansible-consul/roles/consul-setup/templates/config.json.j2'
+    dest: '/etc/consul.d/config.json'
+    mode: '0777'
+
+- name: Template a file to /etc/init/consul.conf
+  become: 'true'
+  template:
+    src: '/Users/apple/Documents/Work/ansible-consul/roles/consul-setup/templates/consulconf.json.j2'
+    dest: '/etc/init/consul.conf'
+    mode: '0777'
+
+- name: Template a file to /etc/systemd/system/consul.service
+  become: 'true'
+  template:
+    src: '/Users/apple/Documents/Work/ansible-consul/roles/consul-setup//templates/consulservice.json.j2'
+    dest: '/etc/systemd/system/consul.service'
+    mode: '0777'
+
+- name: Chmod 777 /opt/consul
+  become: 'true'
+  file:
+    path: /opt/consul
+    state: directory
+    mode: '0777'
+
+- name: Create an node-id file
+  become: 'true'
+  file:
+    path: '/opt/consul/node-id'
+    state: 'touch'
+    force: 'yes'
+    owner: root
+    group: root
+    mode: '0777'

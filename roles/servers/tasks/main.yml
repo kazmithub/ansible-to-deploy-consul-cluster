@@ -1,0 +1,7 @@
+---
+
+- name: start agent
+  become: 'true'
+  register: 'serverLaunch'
+  shell:
+    cmd: "/usr/local/bin/consul agent -node-id 'adf4238a-{{ range(100, 1000) | random }}b-9ddc-4a9d-5b6758e4159e' -config-file /etc/consul.d/config.json &"

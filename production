@@ -1,0 +1,9 @@
+[bootstrap]
+18.236.144.22 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[servers]
+52.25.79.56 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[clients]
+54.245.0.44 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
